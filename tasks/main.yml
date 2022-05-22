@@ -15,8 +15,6 @@
       name: kubernetes
       description: kubernetes repo
       baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
-      gpgcheck: 1
-      repo_gpgcheck: 1
       enabled: 1
       gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
   register: a
@@ -59,7 +57,14 @@
   package:
       name: "iproute-tc"
       state: present
+- name: Copy the file from Local to Slave
+  copy: src=/home/deepaksaini/tokens.sh dest=/home/ec2-user
 
 - name: Join master
-  shell: "{{ tokens }}"
+  shell: "bash /home/ec2-user/tokens.sh"
 
+
+# - name: Store tags in File for Retrive After the use.
+#   shell: "{ curl http://169.254.169.254/latest/meta-data/local-hostname ; curl http://169.254.169.254/latest/meta-data/tags/instance/Name; } | paste -d "   " -s   >> NodeInfo"
+#   register: labeld
+#   ignore_errors: yes
